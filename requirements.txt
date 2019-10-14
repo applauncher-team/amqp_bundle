@@ -1,0 +1,2 @@
+applauncher==1.44
+kombu==4.6.5
