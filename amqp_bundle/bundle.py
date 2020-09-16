@@ -10,7 +10,8 @@ class AmqpBundle(object):
         self.config_mapping = {
             "amqp": {
                 "uri": None,
-                "autodisconnect": False
+                "autodisconnect": False,
+                "heartbeat": 0,
             }
         }
         self.autodisconnect = None
@@ -30,8 +31,9 @@ class AmqpBundle(object):
             self.logger.info("Disconnected")
 
     def configuration_ready(self, event):
-        self.autodisconnect = event.configuration.amqp.autodisconnect
+        c = event.configuration.amqp
+        self.autodisconnect = c.autodisconnect
         # First connect the topic manager to avoid lose messages
-        self.connection.__init__(event.configuration.amqp.uri)
+        self.connection.__init__(c.uri, heartbeat=c.heartbeat)
         self.connection.connect()
         self.logger.info("Connected")
